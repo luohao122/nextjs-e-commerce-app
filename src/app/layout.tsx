@@ -3,7 +3,10 @@ import { Geist, Geist_Mono, Barlow } from "next/font/google"; // Importing Googl
 import { ThemeProvider } from "next-themes"; // Theme provider for dark/light mode support
 
 import { ClerkProvider } from "@clerk/nextjs"; // Clerk authentication provider for handling user sessions
+import { Toaster } from "@/components/ui/toaster"; // Setup toast provider
+import { Toaster as SonnerToaster } from "@/components/ui/sonner"; // Setup toast provider
 
+import ModalProvider from "@/contexts/modal-provider";
 import "./globals.css"; // Global styles for the application
 
 // Define and configure fonts with CSS variables for use in the application
@@ -34,7 +37,7 @@ export const metadata: Metadata = {
 
 /**
  * Root layout component for the application.
- * It wraps all pages and handles authentication, theming, and global font styles.
+ * It wraps all pages and handles authentication, theming, toasts, and global font styles.
  *
  * @param {object} props - Component props
  * @param {React.ReactNode} props.children - Child components to be rendered inside the layout
@@ -45,7 +48,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignOutUrl="/">
       <html lang="en" suppressHydrationWarning>
         <body
           className={`${geistSans.variable} ${geistMono.variable} ${barlow.variable} antialiased`}
@@ -56,7 +59,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <ModalProvider>{children}</ModalProvider>
+            <Toaster />
+            <SonnerToaster position="bottom-right" />
           </ThemeProvider>
         </body>
       </html>
