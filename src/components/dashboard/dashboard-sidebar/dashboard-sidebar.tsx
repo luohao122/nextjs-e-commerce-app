@@ -16,7 +16,7 @@ export default async function DashboardSidebar({
   const loggedUser = await currentUser();
 
   return (
-    <aside className="w-[300px] border-r h-screen p-4 flex flex-col fixed top-0 left-0 bottom-0">
+    <aside className="w-[300px] border-r h-screen p-4 flex flex-col fixed top-0 left-0 bottom-0 overflow-y-auto">
       <Logo width="100%" height="180px" />
       <span className="mt-3" />
       {loggedUser && <UserInfo user={loggedUser} />}
