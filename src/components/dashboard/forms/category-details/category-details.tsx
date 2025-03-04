@@ -37,6 +37,7 @@ import { Button } from "@/components/ui/button";
 import ImageUpload from "@/components/dashboard/shared/image-upload/image-upload";
 
 import { upsertCategory } from "@/queries/category.query";
+import { ROUTES } from "@/config/route-name";
 
 /**
  * CategoryDetails Component
@@ -128,7 +129,7 @@ const CategoryDetails: FC<CategoryDetailsProps> = ({ data, cloudinaryKey }) => {
       if (data?.id) {
         router.refresh();
       } else {
-        router.push("/dashboard/admin/categories");
+        router.push(ROUTES.ADMIN_CATEGORIES_LIST);
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

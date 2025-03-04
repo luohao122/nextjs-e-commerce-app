@@ -7,6 +7,7 @@ import { getAllSubCategories } from "@/queries/sub-category.query";
 import SubCategoryDetails from "@/components/dashboard/forms/sub-category-details/sub-category-details";
 import { getAllCategories } from "@/queries/category.query";
 import { columns } from "@/components/dashboard/forms/sub-category-table/sub-category-columns/sub-category-columns";
+import { ROUTES } from "@/config/route-name";
 
 export default async function AdminSubCategoriesPage() {
   const subCategories = await getAllSubCategories()
@@ -25,7 +26,7 @@ export default async function AdminSubCategoriesPage() {
       data={subCategories}
       searchPlaceholder="Search sub-category name..."
       columns={columns}
-      newTabLink="/dashboard/admin/sub-categories/new"
+      newTabLink={ROUTES.ADMIN_NEW_SUB_CATEGORY}
     />
   );
 }

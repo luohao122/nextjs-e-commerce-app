@@ -4,6 +4,6 @@ export interface ImageUploadProps {
   onRemove: (value: string) => void;
   value: string[];
   type: "standard" | "profile" | "cover";
-  showPreview?: boolean;
+  dontShowPreview?: boolean;
   cloudinaryPreset: string;
 }

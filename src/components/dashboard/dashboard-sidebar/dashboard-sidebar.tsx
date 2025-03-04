@@ -4,14 +4,18 @@ import { DashboardSidebarProps } from "@/components/dashboard/dashboard-sidebar/
 import Logo from "@/components/shared/logo";
 import UserInfo from "@/components/dashboard/user-info/user-info";
 
-import DashboardSidebarNav from "@/components/dashboard/dashboard-sidebar-nav/dashboard-sidebar-nav";
+import AdminDashboardSidebarNav from "@/components/dashboard/admin-dashboard-sidebar-nav/admin-dashboard-sidebar-nav";
 import {
   adminDashboardSidebarOptions,
   sellerDashboardSidebarOptions,
 } from "@/config/dashboard-data";
+import SellerDashboardSidebarNav from "@/components/dashboard/seller-dashboard-sidebar-nav/seller-dashboard-sidebar-nav";
+
+import StoreSwitcher from "@/components/dashboard/store-switcher/store-switcher";
 
 export default async function DashboardSidebar({
   isAdmin,
+  stores,
 }: DashboardSidebarProps) {
   const loggedUser = await currentUser();
 
@@ -20,10 +24,11 @@ export default async function DashboardSidebar({
       <Logo width="100%" height="180px" />
       <span className="mt-3" />
       {loggedUser && <UserInfo user={loggedUser} />}
+      {!isAdmin && stores && <StoreSwitcher stores={stores} />}
       {isAdmin ? (
-        <DashboardSidebarNav menuLinks={adminDashboardSidebarOptions} />
+        <AdminDashboardSidebarNav menuLinks={adminDashboardSidebarOptions} />
       ) : (
-        <DashboardSidebarNav menuLinks={sellerDashboardSidebarOptions} />
+        <SellerDashboardSidebarNav menuLinks={sellerDashboardSidebarOptions} />
       )}
     </aside>
   );

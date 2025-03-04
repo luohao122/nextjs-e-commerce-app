@@ -29,17 +29,23 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  stores Store[] @relation("UserStores")
 }
 
 model Category {
-  id            String        @id @default(uuid())
-  name          String
-  image         String
-  url           String
-  featured      Boolean       @default(false)
+  id       String  @id @default(uuid())
+  name     String
+  image    String
+  url      String
+  featured Boolean @default(false)
+
   subCategories SubCategory[] @relation("CategoryToSubCategory")
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+
+  products Product[] @relation("CategoryToProduct")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model SubCategory {
@@ -52,8 +58,140 @@ model SubCategory {
   categoryId String
   category   Category @relation("CategoryToSubCategory", fields: [categoryId], references: [id])
 
+  products Product[] @relation("SubCategoryToProduct")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([categoryId])
+}
+
+enum StoreStatus {
+  PENDING
+  ACTIVE
+  BANNED
+  DISABLED
+}
+
+model Store {
+  id                     String      @id @default(uuid())
+  name                   String
+  description            String      @db.Text
+  email                  String      @unique
+  phone                  String
+  url                    String      @unique
+  logo                   String
+  cover                  String
+  status                 StoreStatus @default(PENDING)
+  averageRating          Float       @default(0)
+  featured               Boolean     @default(false)
+  returnPolicy           String?
+  defaultShippingService String?
+  defaultShippingFees    Float?
+  defaultDeliveryTimeMin Int?
+  defaultDeliveryTimeMax Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation("UserStores", fields: [userId], references: [id])
+
+  products Product[] @relation("StoreToProduct")
+
+  @@index([userId])
+}
+
+model Product {
+  id          String @id @default(uuid())
+  name        String
+  description       String            @db.LongText
+  slug        String @unique
+  brand       String
+  rating      Float  @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  variants ProductVariant[] @relation("ProductToProductVariant")
+
+  storeId String
+  store   Store  @relation("StoreToProduct", fields: [storeId], references: [id])
+
+  categoryId String
+  category   Category @relation("CategoryToProduct", fields: [categoryId], references: [id])
+
+  subCategoryId String
+  subCategory   SubCategory @relation("SubCategoryToProduct", fields: [subCategoryId], references: [id])
+
+  @@index([storeId])
+  @@index([categoryId])
+  @@index([subCategoryId])
+}
+
+model ProductVariant {
+  id                 String  @id @default(uuid())
+  variantName        String
+  variantDescription String? @db.LongText
+  slug               String  @unique
+  isSale             Boolean @default(false)
+  keywords           String
+  seoTitle           String  @db.Text
+  seoDescription     String  @db.Text
+  sku                String
+
+  productId String
+  product   Product @relation("ProductToProductVariant", fields: [productId], references: [id])
+
+  sizes  Size[]                @relation("ProductVariantSizes")
+  images ProductVariantImage[] @relation("ProductVariantToVariantImage")
+  colors Color[]               @relation("ProductVariantColors")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+}
+
+model Size {
+  id       String @id @default(uuid())
+  size     String
+  quantity Int
+  price    Float
+  discount Float  @default(0)
+
+  productVariantId String
+  productVariant   ProductVariant @relation("ProductVariantSizes", fields: [productVariantId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productVariantId])
+}
+
+model ProductVariantImage {
+  id  String @id @default(uuid())
+  url String
+  alt String @default("")
+
+  productVariantId String
+  productVariant   ProductVariant @relation("ProductVariantToVariantImage", fields: [productVariantId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productVariantId])
+}
+
+model Color {
+  id   String @id @default(uuid())
+  name String
+
+  productVariantId String
+  productVariant   ProductVariant @relation("ProductVariantColors", fields: [productVariantId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productVariantId])
 }

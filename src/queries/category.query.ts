@@ -111,6 +111,35 @@ export const getAllCategories = async () => {
 };
 
 /**
+ * Retrieves all sub-categories from the database based on a given categoryId.
+ *
+ * This function uses Prisma's client to fetch all sub-categories for a given category,
+ * ordering them by their last updated date in descending order.
+ * If an error occurs during the fetch, it logs the error and throws a new error with the original error message.
+ *
+ * @returns {Promise<SubCategory[]>} A promise that resolves with an array of SubCategory objects.
+ * @throws {Error} Throws an error if fetching sub-categories fails.
+ */
+export const getAllSubCategoriesForCategory = async (categoryId: string) => {
+  try {
+    // Retrieve all sub-categories, ordering by 'updatedAt' in descending order.
+    const subCategories = await db.subCategory.findMany({
+      where: {
+        categoryId,
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+    return subCategories;
+  } catch (error) {
+    console.error(error);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    throw new Error((error as any).message);
+  }
+};
+
+/**
  * Retrieves a category from the database by its unique identifier.
  *
  * This function uses Prisma's `findUnique` method to fetch a category based on the provided categoryId.

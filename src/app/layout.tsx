@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster"; // Setup toast provider
 import { Toaster as SonnerToaster } from "@/components/ui/sonner"; // Setup toast provider
 
 import ModalProvider from "@/contexts/modal-provider";
+import { ROUTES } from "@/config/route-name";
 import "./globals.css"; // Global styles for the application
 
 // Define and configure fonts with CSS variables for use in the application
@@ -48,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider afterSignOutUrl="/">
+    <ClerkProvider afterSignOutUrl={ROUTES.HOME}>
       <html lang="en" suppressHydrationWarning>
         <body
           className={`${geistSans.variable} ${geistMono.variable} ${barlow.variable} antialiased`}

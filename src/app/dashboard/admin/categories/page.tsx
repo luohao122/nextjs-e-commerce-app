@@ -6,6 +6,7 @@ import { CLOUDINARY_PRESET } from "@/config/constants";
 
 import { getAllCategories } from "@/queries/category.query";
 import { columns } from "@/components/dashboard/forms/category-table/category-columns/category-columns";
+import { ROUTES } from "@/config/route-name";
 
 export default async function AdminCategoryPage() {
   const categories = await getAllCategories();
@@ -23,7 +24,7 @@ export default async function AdminCategoryPage() {
       data={categories}
       searchPlaceholder="Search category name..."
       columns={columns}
-      newTabLink="/dashboard/admin/categories/new"
+      newTabLink={ROUTES.ADMIN_NEW_CATEGORY}
     />
   );
 }

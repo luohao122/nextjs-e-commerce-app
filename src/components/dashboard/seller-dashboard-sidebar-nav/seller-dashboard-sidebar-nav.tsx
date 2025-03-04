@@ -1,6 +1,8 @@
 "use client";
 
-import { DashboardSidebarNavProps } from "@/components/dashboard/dashboard-sidebar-nav/dashboard-sidebar-nav.types";
+import Link from "next/link";
+import { useParams, usePathname } from "next/navigation";
+
 import {
   Command,
   CommandEmpty,
@@ -10,19 +12,27 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { icons } from "@/config/icons";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 
-export default function DashboardSidebarNav({
+import { cn } from "@/lib/utils";
+import { SellerDashboardSidebarNavProps } from "@/components/dashboard/seller-dashboard-sidebar-nav/seller-dashboard-sidebar-nav.types";
+
+export default function SellerDashboardSidebarNav({
   menuLinks,
-}: DashboardSidebarNavProps) {
+}: SellerDashboardSidebarNavProps) {
   const pathname = usePathname();
+  const params = useParams<{ storeUrl: string }>();
+  const activeStore = params.storeUrl;
 
   // Compute the best matching link (the one with the longest match)
   const activeLink = menuLinks.reduce((best, link) => {
-    if (pathname.startsWith(link.link) && link.link.length > best.length) {
-      return link.link;
+    if (
+      pathname.startsWith(
+        `/dashboard/seller/stores/${activeStore}/${link.link}`
+      ) &&
+      `/dashboard/seller/stores/${activeStore}/${link.link}`.length >
+        best.length
+    ) {
+      return `/dashboard/seller/stores/${activeStore}/${link.link}`;
     }
     return best;
   }, "");
@@ -41,7 +51,11 @@ export default function DashboardSidebarNav({
                 Icon = <IconSearch.path />;
               }
               // Mark active only if this link is the best match
-              const isActive = link.link === activeLink;
+              const isActive =
+                link.link === ""
+                  ? pathname === `/dashboard/seller/stores/${activeStore}`
+                  : `/dashboard/seller/stores/${activeStore}/${link.link}` ===
+                    activeLink;
 
               return (
                 <CommandItem
@@ -51,7 +65,7 @@ export default function DashboardSidebarNav({
                   })}
                 >
                   <Link
-                    href={link.link}
+                    href={`/dashboard/seller/stores/${activeStore}/${link.link}`}
                     className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all w-full"
                   >
                     {Icon}

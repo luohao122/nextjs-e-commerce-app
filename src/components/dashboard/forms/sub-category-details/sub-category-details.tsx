@@ -44,6 +44,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ROUTES } from "@/config/route-name";
 
 /**
  * SubCategoryDetails Component
@@ -144,7 +145,7 @@ const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({
       if (data?.id) {
         router.refresh();
       } else {
-        router.push("/dashboard/admin/sub-categories");
+        router.push(ROUTES.ADMIN_SUB_CATEGORIES_LIST);
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

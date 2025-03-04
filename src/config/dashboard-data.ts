@@ -1,40 +1,41 @@
 import { DashboardSidebarMenuInterface } from "@/types/dashboard-data.types";
+import { ROUTES } from "@/config/route-name";
 
 export const adminDashboardSidebarOptions: DashboardSidebarMenuInterface[] = [
   {
     label: "Dashboard",
     icon: "dashboard",
-    link: "/dashboard/admin",
+    link: ROUTES.ADMIN_DASHBOARD,
   },
   {
     label: "Stores",
     icon: "store",
-    link: "/dashboard/admin/stores",
+    link: ROUTES.ADMIN_STORES_LIST,
   },
   {
     label: "Orders",
     icon: "box-list",
-    link: "/dashboard/admin/orders",
+    link: ROUTES.ADMIN_ORDERS_LIST,
   },
   {
     label: "Categories",
     icon: "categories",
-    link: "/dashboard/admin/categories",
+    link: ROUTES.ADMIN_CATEGORIES_LIST,
   },
   {
     label: "Sub-Categories",
     icon: "categories",
-    link: "/dashboard/admin/sub-categories",
+    link: ROUTES.ADMIN_SUB_CATEGORIES_LIST,
   },
   {
     label: "Offer Tags",
     icon: "offer",
-    link: "/dashboard/admin/offer-tags",
+    link: ROUTES.ADMIN_OFFER_TAGS_LIST,
   },
   {
     label: "Coupons",
     icon: "coupon",
-    link: "/dashboard/admin/coupons",
+    link: ROUTES.ADMIN_COUPONS_LIST,
   },
 ];
 
@@ -42,36 +43,36 @@ export const sellerDashboardSidebarOptions: DashboardSidebarMenuInterface[] = [
   {
     label: "Dashboard",
     icon: "dashboard",
-    link: "",
+    link: ROUTES.SELLER_HOME,
   },
   {
     label: "Products",
     icon: "products",
-    link: "products",
+    link: ROUTES.SELLER_PRODUCTS_LIST,
   },
   {
     label: "Orders",
     icon: "box-list",
-    link: "orders",
+    link: ROUTES.SELLER_ORDERS_LIST,
   },
   {
     label: "Inventory",
     icon: "inventory",
-    link: "inventory",
+    link: ROUTES.SELLER_INVENTORY_LIST,
   },
   {
     label: "Coupons",
     icon: "coupon",
-    link: "coupons",
+    link: ROUTES.SELLER_COUPONS_LIST,
   },
   {
     label: "Shipping",
     icon: "shipping",
-    link: "shipping",
+    link: ROUTES.SELLER_SHIPPING_LIST,
   },
   {
     label: "Settings",
     icon: "settings",
-    link: "settings",
+    link: ROUTES.SELLER_SETTINGS_LIST,
   },
 ];
