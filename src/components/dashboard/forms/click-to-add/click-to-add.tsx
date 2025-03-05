@@ -1,20 +1,20 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PaintBucket } from "lucide-react";
 import { SketchPicker } from "react-color";
 
 import { Input } from "@/components/ui/input";
-import { ClickToAddInputsProps } from "@/components/dashboard/forms/click-to-add/click-to-add.types";
+import { ClickToAddInputsProps, Detail } from "@/components/dashboard/forms/click-to-add/click-to-add.types";
 import PlusButton from "@/components/dashboard/forms/click-to-add/components/PlusButton";
 
 import MinusButton from "@/components/dashboard/forms/click-to-add/components/MinusButton";
 
-const ClickToAddInputs: FC<ClickToAddInputsProps> = ({
+const ClickToAddInputs = <T extends Detail>({
   details,
   setDetails,
-  initialDetail = {},
+  initialDetail = {} as T,
   header,
   colorPicker,
-}) => {
+}: ClickToAddInputsProps<T>) => {
   const colorPickerRef = useRef<HTMLDivElement | null>(null);
   const [colorPickerIndex, setColorPickerIndex] = useState<number | null>(null);
   const handleDetailsChange = (
@@ -67,7 +67,7 @@ const ClickToAddInputs: FC<ClickToAddInputsProps> = ({
 
   return (
     <div className="flex flex-col gap-y-4">
-      <div>{header}</div>
+      {header && <div>{header}</div>}
       {!details.length && <PlusButton onClick={handleAddDetail} />}
       {details.map((detail, index) => (
         <div key={index} className="flex items-center gap-x-4">

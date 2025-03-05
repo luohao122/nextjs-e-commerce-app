@@ -6,7 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import Link from "next/link";
 
-import CategoryCellActions from "@/components/dashboard/forms/category-table/category-columns/category-cell-actions";
+import ProductCellActions from "@/components/dashboard/forms/product-table/product-columns/product-cell-actions";
 import { StoreProduct } from "@/components/dashboard/forms/product-table/product-columns/product-columns.types";
 
 /**
@@ -19,7 +19,7 @@ import { StoreProduct } from "@/components/dashboard/forms/product-table/product
  */
 export const columns: ColumnDef<StoreProduct>[] = [
   {
-    accessorKey: "image",
+    accessorKey: "name",
     header: "",
     cell: ({ row }) => {
       return (
@@ -45,8 +45,8 @@ export const columns: ColumnDef<StoreProduct>[] = [
                       <FilePenLine className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white" />
                     </div>
                   </Link>
-                  <div className="flex mt-2 gap-2">
-                    <div className="w-7 flex flex-col gap-2 rounded-md">
+                  <div className="flex flex-col mt-2 gap-2 p-1">
+                    <div className="w-full flex flex-row gap-2 rounded-md">
                       {variant.colors.map((color) => (
                         <span
                           key={color.name}
@@ -54,6 +54,21 @@ export const columns: ColumnDef<StoreProduct>[] = [
                           style={{ backgroundColor: color.name }}
                         />
                       ))}
+                    </div>
+                    <div>
+                      <h1 className="max-w-40 capitalize text-sm">
+                        {variant.variantName}
+                      </h1>
+                      <div className="flex flex-wrap gap-2 max-w-72 mt-1">
+                        {variant.sizes.map((size) => (
+                          <span
+                            key={size.size}
+                            className="w-fit p-1 rounded-md text-[11px] font-medium border-2 bg-white/10"
+                          >
+                            {size.size} - ({size.quantity}) - ${size.price}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -71,7 +86,6 @@ export const columns: ColumnDef<StoreProduct>[] = [
       return <span>{row.original.category.name}</span>;
     },
   },
-
   {
     accessorKey: "subCategory",
     header: "SubCategory",
@@ -95,9 +109,9 @@ export const columns: ColumnDef<StoreProduct>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      // Render the action buttons (edit/delete) using the CategoryCellActions component.
+      // Render the action buttons (delete) using the ProductCellActions component.
       const rowData = row.original;
-      return <CategoryCellActions rowData={rowData} />;
+      return <ProductCellActions productId={rowData.id} />;
     },
   },
 ];

@@ -7,10 +7,10 @@ export interface Detail {
   [key: string]: string | number | boolean | undefined;
 }
 
-export interface ClickToAddInputsProps {
-  details: Detail[];
-  setDetails: Dispatch<SetStateAction<Detail[]>>;
-  initialDetail?: Detail;
-  header: string;
+export interface ClickToAddInputsProps<T extends Detail> {
+  details: T[];
+  setDetails: Dispatch<SetStateAction<T[]>>;
+  initialDetail?: T;
+  header?: string;
   colorPicker?: boolean;
 }

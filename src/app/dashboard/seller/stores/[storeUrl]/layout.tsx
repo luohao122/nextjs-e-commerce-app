@@ -25,9 +25,9 @@ export default async function SellerStoreDashboardLayout({
   // Retrieve user's list of stores
   const stores = await db.store.findMany({
     where: {
-      userId: loggedUser.id
-    }
-  })
+      userId: loggedUser.id,
+    },
+  });
 
   return (
     <div className="w-full h-full flex">

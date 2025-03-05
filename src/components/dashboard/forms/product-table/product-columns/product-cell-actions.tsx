@@ -2,10 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 
-import CategoryDetails from "@/components/dashboard/forms/category-details/category-details";
-import CustomModal from "@/components/dashboard/shared/custom-modal/custom-modal";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,43 +16,30 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useModal } from "@/contexts/modal-provider";
-
-import { getCategory, deleteCategory } from "@/queries/category.query";
 import { useToast } from "@/hooks/use-toast";
-import { CLOUDINARY_PRESET } from "@/config/constants";
+import { CellActionsProps } from "@/components/dashboard/forms/product-table/product-columns/product-columns.types";
 
-import { CellActionsProps } from "@/components/dashboard/forms/category-table/category-columns/category-columns.types";
+import { deleteProduct } from "@/queries/product.query";
 
 /**
  * ProductCellActions Component
  *
  * Provides action buttons for a product row, including editing and deleting actions.
- * - When "Edit Details" is clicked, a modal is opened with the CategoryDetails component,
- *   which displays and optionally fetches the latest product data.
  * - When "Delete product" is clicked, a confirmation dialog is shown, and upon confirmation,
  *   the product is deleted.
  *
  * @component
  * @param {CellActionsProps} props - The properties for the component.
- * @param {Category} props.rowData - The product data for the current row.
- * @returns {JSX.Element|null} The rendered action cell or null if rowData or its id is not available.
+ * @param {string} props.productId - The product id for the current row.
+ * @returns {JSX.Element|null} The rendered action cell or null if productId is not available.
  *
  * @example
- * <ProductCellActions rowData={product} />
+ * <ProductCellActions productId={product.id} />
  */
-const ProductCellActions: React.FC<CellActionsProps> = ({ rowData }) => {
+const ProductCellActions: React.FC<CellActionsProps> = ({ productId }) => {
   // Retrieve modal control functions from the modal context.
-  const { setOpen, setClose } = useModal();
+  const { setClose } = useModal();
   // Local loading state for delete operation.
   const [loading, setLoading] = useState(false);
   // Toast hook to display notifications.
@@ -63,50 +48,15 @@ const ProductCellActions: React.FC<CellActionsProps> = ({ rowData }) => {
   const router = useRouter();
 
   // Return null if no row data or product id is provided.
-  if (!rowData || !rowData.id) return null;
+  if (!productId) return null;
 
   return (
     <AlertDialog>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            className="flex gap-2"
-            onClick={() => {
-              setOpen(
-                // Custom modal component
-                <CustomModal>
-                  {/* Store details component */}
-                  <CategoryDetails
-                    cloudinaryKey={CLOUDINARY_PRESET}
-                    data={{ ...rowData }}
-                  />
-                </CustomModal>,
-                async () => {
-                  return {
-                    rowData: await getCategory(rowData?.id),
-                  };
-                }
-              );
-            }}
-          >
-            <Edit size={15} />
-            Edit Details
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <AlertDialogTrigger asChild>
-            <DropdownMenuItem className="flex gap-2" onClick={() => {}}>
-              <Trash size={15} /> Delete product
-            </DropdownMenuItem>
-          </AlertDialogTrigger>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <AlertDialogTrigger asChild>
+        <div>
+          <Trash size={15} onClick={() => {}} />
+        </div>
+      </AlertDialogTrigger>
       <AlertDialogContent className="max-w-lg">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-left">
@@ -114,7 +64,7 @@ const ProductCellActions: React.FC<CellActionsProps> = ({ rowData }) => {
           </AlertDialogTitle>
           <AlertDialogDescription className="text-left">
             This action cannot be undone. This will permanently delete the
-            product and related data.
+            product and variants related data.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="flex items-center">
@@ -124,7 +74,7 @@ const ProductCellActions: React.FC<CellActionsProps> = ({ rowData }) => {
             className="bg-destructive hover:bg-destructive mb-2 text-white"
             onClick={async () => {
               setLoading(true);
-              await deleteCategory(rowData.id);
+              await deleteProduct(productId);
               toast({
                 title: "Deleted product",
                 description: "The product has been deleted.",
