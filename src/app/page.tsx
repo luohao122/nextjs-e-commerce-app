@@ -1,6 +1,7 @@
+import { UserButton } from "@clerk/nextjs";
+
 import ThemeToggle from "@/components/shared/theme-toggle";
 import { Button } from "@/components/ui/button";
-import { UserButton } from "@clerk/nextjs";
 
 export default function Home() {
   return (

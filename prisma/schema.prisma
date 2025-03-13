@@ -74,22 +74,27 @@ enum StoreStatus {
 }
 
 model Store {
-  id                     String      @id @default(uuid())
-  name                   String
-  description            String      @db.Text
-  email                  String      @unique
-  phone                  String
-  url                    String      @unique
-  logo                   String
-  cover                  String
-  status                 StoreStatus @default(PENDING)
-  averageRating          Float       @default(0)
-  featured               Boolean     @default(false)
-  returnPolicy           String?
-  defaultShippingService String?
-  defaultShippingFees    Float?
-  defaultDeliveryTimeMin Int?
-  defaultDeliveryTimeMax Int?
+  id                                  String      @id @default(uuid())
+  name                                String
+  description                         String      @db.Text
+  email                               String      @unique
+  phone                               String
+  url                                 String      @unique
+  logo                                String
+  cover                               String
+  status                              StoreStatus @default(PENDING)
+  averageRating                       Float       @default(0)
+  featured                            Boolean     @default(false)
+  returnPolicy                        String      @default("Return in 30 days.")
+  defaultShippingService              String      @default("International Delivery")
+  defaultShippingFeePerItem           Float       @default(0)
+  defaultShippingFeeForAdditionalItem Float       @default(0)
+  defaultShippingFeePerKg             Float       @default(0)
+  defaultShippingFeeFixed             Float       @default(0)
+  defaultDeliveryTimeMin              Int         @default(7)
+  defaultDeliveryTimeMax              Int         @default(31)
+
+  shippingRates ShippingRate[] @relation("StoreShippingRates")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -247,4 +252,40 @@ model Question {
   updatedAt DateTime @updatedAt
 
   @@index([productId])
+}
+
+model Country {
+  id   String @id @default(uuid())
+  name String @unique
+  code String @unique
+
+  shippingRates ShippingRate[] @relation("CountryShippingRates")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ShippingRate {
+  id String @id @default(uuid())
+
+  shippingService              String
+  shippingFeePerItem           Float
+  shippingFeeForAdditionalItem Float
+  shippingFeePerKg             Float
+  shippingFeeFixed             Float
+  deliveryTimeMin              Int
+  deliveryTimeMax              Int
+  returnPolicy                 String
+
+  countryId String
+  country   Country @relation("CountryShippingRates", fields: [countryId], references: [id])
+
+  storeId String
+  store   Store  @relation("StoreShippingRates", fields: [storeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([countryId])
+  @@index([storeId])
 }
