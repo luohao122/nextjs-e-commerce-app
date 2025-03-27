@@ -63,6 +63,17 @@ export default {
         blue: {
           primary: "#0D6EFD",
         },
+        orange: {
+          background: "#FD384F",
+          hover: "#e23246",
+          primary: "#FA6338",
+          secondary: "#d3031c",
+          border: "#ffe6e7",
+        },
+        main: {
+          primary: "#191919",
+          secondary: "#757575",
+        },
       },
       fontFamily: {
         barlow: "var(--font-barlow)",
@@ -93,6 +104,15 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      backgroundImage: {
+        home: "url(/public/assets/images/home-wallpaper.webp)",
+      },
+      transitionTimingFunction: {
+        "bezier-1": "cubic-bezier(.645,.045,.355,1)",
+      },
+      maxWidth: {
+        container: "1200px",
       },
     },
   },

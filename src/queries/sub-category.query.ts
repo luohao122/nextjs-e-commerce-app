@@ -198,3 +198,36 @@ export const deleteSubCategory = async (subCategoryId: string) => {
     throw new Error((error as any).message);
   }
 };
+
+export const getSubCategories = async (
+  limit: number | null,
+  random: boolean = false
+): Promise<SubCategory[]> => {
+  enum SortOrder {
+    asc = "asc",
+    desc = "desc",
+  }
+
+  try {
+    const queryOptions = {
+      take: limit || undefined,
+      orderBy: random ? { createdAt: SortOrder.desc } : undefined,
+    };
+
+    if (random) {
+      const subcategories = await db.$queryRaw<SubCategory[]>`
+    SELECT * FROM SubCategory
+    ORDER BY RAND()
+    LIMIT ${limit || 10} 
+    `;
+      return subcategories;
+    } else {
+      const subcategories = await db.subCategory.findMany(queryOptions);
+      return subcategories;
+    }
+  } catch (error) {
+    console.error(error);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    throw new Error((error as any).message);
+  }
+};

@@ -163,6 +163,7 @@ const ProductDetails: FC<ProductDetailsProps> = ({
       keywords: data?.keywords,
       questions: data?.questions,
       isSale: data?.isSale,
+      weight: data?.weight,
       saleEndDate:
         data?.saleEndDate || format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
     },
@@ -235,6 +236,7 @@ const ProductDetails: FC<ProductDetailsProps> = ({
           saleEndDate: values.saleEndDate,
           brand: values.brand,
           sku: values.sku,
+          weight: values.weight,
           colors: values.colors,
           sizes: values.sizes || [],
           keywords: values.keywords || [],
@@ -550,6 +552,27 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                       <FormLabel>Product SKU</FormLabel>
                       <FormControl>
                         <Input placeholder="Product SKU" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  disabled={isLoading}
+                  control={form.control}
+                  name="weight"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Product Weight</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min={0.01}
+                          step={0.01}
+                          placeholder="Product Weight"
+                          {...field}
+                          onChange={(e) => field.onChange(+e.target.value)}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

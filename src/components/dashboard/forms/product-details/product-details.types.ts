@@ -8,13 +8,14 @@ export type ProductWithVariantType = {
   variantName: string;
   variantDescription: string;
   variantImage: string;
-  images: { url: string }[];
+  images: { id?: string; url: string }[];
   categoryId: string;
   subCategoryId: string;
   isSale: boolean;
   saleEndDate?: string;
   brand: string;
   sku: string;
+  weight: number;
   seoTitle: string;
   seoDescription: string;
   colors: { color: string }[];

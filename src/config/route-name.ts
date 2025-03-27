@@ -14,7 +14,7 @@ export const ROUTES = {
   SELLER_DASHBOARD: "/dashboard/seller",
   SELLER_CREATE_STORE: "/dashboard/seller/stores/new",
   SELLER_STORES_LIST: "/dashboard/seller/stores",
-  
+
   SELLER_HOME: "",
   SELLER_PRODUCTS_LIST: "products",
   SELLER_ORDERS_LIST: "orders",
@@ -22,4 +22,8 @@ export const ROUTES = {
   SELLER_INVENTORY_LIST: "inventory",
   SELLER_SHIPPING_LIST: "shipping",
   SELLER_SETTINGS_LIST: "settings",
+
+  PROFILE_FOLLOWING_REDIRECT: "/profile/following/1",
+  PROFILE_HISTORY_REDIRECT: "/profile/history/1",
+  PROFILE_WISHLIST_REDIRECT: "/profile/wishlist/1",
 };

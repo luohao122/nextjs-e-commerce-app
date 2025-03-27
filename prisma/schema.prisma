@@ -30,14 +30,16 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  stores Store[] @relation("UserStores")
+  stores    Store[]  @relation("UserStores")
+  following Store[]  @relation("UserFollowingStore")
+  reviews   Review[] @relation("ReviewToUser")
 }
 
 model Category {
   id       String  @id @default(uuid())
   name     String
   image    String
-  url      String
+  url      String  @unique
   featured Boolean @default(false)
 
   subCategories SubCategory[] @relation("CategoryToSubCategory")
@@ -52,7 +54,7 @@ model SubCategory {
   id       String  @id @default(uuid())
   name     String
   image    String
-  url      String
+  url      String  @unique
   featured Boolean @default(false)
 
   categoryId String
@@ -84,6 +86,7 @@ model Store {
   cover                               String
   status                              StoreStatus @default(PENDING)
   averageRating                       Float       @default(0)
+  numReviews                          Int         @default(0)
   featured                            Boolean     @default(false)
   returnPolicy                        String      @default("Return in 30 days.")
   defaultShippingService              String      @default("International Delivery")
@@ -94,26 +97,38 @@ model Store {
   defaultDeliveryTimeMin              Int         @default(7)
   defaultDeliveryTimeMax              Int         @default(31)
 
-  shippingRates ShippingRate[] @relation("StoreShippingRates")
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   userId String
   user   User   @relation("UserStores", fields: [userId], references: [id])
 
-  products Product[] @relation("StoreToProduct")
+  products  Product[] @relation("StoreToProduct")
+  shippingRates ShippingRate[] @relation("StoreShippingRates")
+  followers User[]    @relation("UserFollowingStore")
 
   @@index([userId])
 }
 
+enum ShippingFeeMethod {
+  ITEM
+  WEIGHT
+  FIXED
+}
+
 model Product {
-  id          String @id @default(uuid())
-  name        String
-  description String @db.LongText
-  slug        String @unique
-  brand       String
-  rating      Float  @default(0)
+  id                          String            @id @default(uuid())
+  name                        String
+  description                 String            @db.LongText
+  slug                        String            @unique
+  brand                       String
+  rating                      Float             @default(0)
+  sales                       Int               @default(0)
+  numReviews                  Int               @default(0)
+  shippingFeeMethod           ShippingFeeMethod @default(ITEM)
+  views                       Int               @default(0)
+  freeShipping                FreeShipping?     @relation("ProductFreeShipping")
+  freeShippingForAllCountries Boolean           @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -122,6 +137,7 @@ model Product {
   specs    Spec[]           @relation("ProductSpec")
 
   questions Question[] @relation("ProductQuestion")
+  reviews   Review[]   @relation("ReviewToProduct")
 
   storeId String
   store   Store  @relation("StoreToProduct", fields: [storeId], references: [id])
@@ -153,6 +169,8 @@ model ProductVariant {
   seoTitle           String  @db.Text
   seoDescription     String  @db.Text
   sku                String
+  sales              Int     @default(0)
+  weight             Float
 
   productId String
   product   Product @relation("ProductToProductVariant", fields: [productId], references: [id])
@@ -259,7 +277,8 @@ model Country {
   name String @unique
   code String @unique
 
-  shippingRates ShippingRate[] @relation("CountryShippingRates")
+  shippingRates         ShippingRate[]        @relation("CountryShippingRates")
+  freeShippingCountries FreeShippingCountry[] @relation("FreeShippingToCountry")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -288,4 +307,68 @@ model ShippingRate {
 
   @@index([countryId])
   @@index([storeId])
+}
+
+model FreeShipping {
+  id                String                @id @default(uuid())
+  productId         String                @unique
+  product           Product               @relation("ProductFreeShipping", fields: [productId], references: [id], onDelete: Cascade)
+  eligibleCountries FreeShippingCountry[] @relation("FreeShippingCountries")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FreeShippingCountry {
+  id             String       @id @default(uuid())
+  freeShippingId String
+  freeShipping   FreeShipping @relation("FreeShippingCountries", fields: [freeShippingId], references: [id], onDelete: Cascade)
+
+  countryId String
+  country   Country @relation("FreeShippingToCountry", fields: [countryId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([freeShippingId])
+  @@index([countryId])
+}
+
+model Review {
+  id       String @id @default(uuid())
+  variant  String
+  review   String
+  rating   Float
+  color    String
+  size     String
+  quantity String
+  likes    Int    @default(0)
+
+  images ReviewImage[] @relation("ReviewToReviewImage")
+
+  userId String
+  user   User   @relation("ReviewToUser", fields: [userId], references: [id])
+
+  productId String
+  product   Product @relation("ReviewToProduct", fields: [productId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([productId])
+}
+
+model ReviewImage {
+  id  String @id @default(uuid())
+  url String
+  alt String @default("")
+
+  reviewId String
+  review   Review @relation("ReviewToReviewImage", fields: [reviewId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([reviewId])
 }
