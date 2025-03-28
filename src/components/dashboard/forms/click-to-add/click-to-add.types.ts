@@ -1,10 +1,11 @@
-// Sample structure of the Detail object:
-
 import { Dispatch, SetStateAction } from "react";
 
+// Sample structure of the Detail object:
 // { quantity: 1 } or { size: "xl" }
-export interface Detail {
-  [key: string]: string | number | boolean | undefined;
+
+// Define the interface for each detail object
+export interface Detail<T = { [key: string]: string | number | undefined }> {
+  [key: string]: T[keyof T];
 }
 
 export interface ClickToAddInputsProps<T extends Detail> {
@@ -13,4 +14,6 @@ export interface ClickToAddInputsProps<T extends Detail> {
   initialDetail?: T;
   header?: string;
   colorPicker?: boolean;
+  containerClassName?: string;
+  inputClassName?: string;
 }

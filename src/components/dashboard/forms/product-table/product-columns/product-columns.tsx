@@ -30,13 +30,13 @@ export const columns: ColumnDef<StoreProduct>[] = [
           <div className="relative flex flex-wrap gap-2">
             {row.original.variants.map((variant) => (
               <div key={variant.id} className="flex flex-col gap-y-2 group">
-                <div className="relative cursor-pointer">
+                <div className="relative cursor-pointer p-2">
                   <Image
                     src={variant.images[0].url}
                     alt={variant.variantName}
                     width={1000}
                     height={1000}
-                    className="min-w-72 max-w-72 h-80 rounded-sm object-cover shadow-2xl"
+                    className="max-w-72 h-72 rounded-md object-cover shadow-sm"
                   />
                   <Link
                     href={`/dashboard/seller/stores/${row.original.store.url}/products/${row.original.id}/variants/${variant.id}`}
@@ -91,6 +91,13 @@ export const columns: ColumnDef<StoreProduct>[] = [
     header: "SubCategory",
     cell: ({ row }) => {
       return <span>/{row.original.subCategory.name}</span>;
+    },
+  },
+  {
+    accessorKey: "offerTag",
+    header: "Offer",
+    cell: ({ row }) => {
+      return <span>{row.original.offerTag?.name}</span>;
     },
   },
   {

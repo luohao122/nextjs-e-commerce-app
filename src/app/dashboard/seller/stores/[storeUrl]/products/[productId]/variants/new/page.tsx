@@ -4,6 +4,9 @@ import { getAllCategories } from "@/queries/category.query";
 
 import { CLOUDINARY_PRESET } from "@/config/constants";
 import { getProductMainDataById } from "@/queries/product.query";
+import { getAllOfferTags } from "@/queries/offer-tag.query";
+
+import { getCountryList } from "@/queries/country.query";
 
 export default async function SellerNewProductVariantPage({
   params,
@@ -12,6 +15,8 @@ export default async function SellerNewProductVariantPage({
   const productId = (await params).productId;
   const categories = await getAllCategories();
   const product = await getProductMainDataById(productId);
+  const offerTags = await getAllOfferTags();
+  const countries = await getCountryList();
 
   if (!product) {
     return null;
@@ -24,6 +29,8 @@ export default async function SellerNewProductVariantPage({
         categories={categories}
         storeUrl={storeUrl}
         data={product}
+        offerTags={offerTags}
+        countries={countries}
       />
     </div>
   );

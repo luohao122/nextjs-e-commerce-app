@@ -3,10 +3,14 @@ import { PaintBucket } from "lucide-react";
 import { SketchPicker } from "react-color";
 
 import { Input } from "@/components/ui/input";
-import { ClickToAddInputsProps, Detail } from "@/components/dashboard/forms/click-to-add/click-to-add.types";
+import {
+  ClickToAddInputsProps,
+  Detail,
+} from "@/components/dashboard/forms/click-to-add/click-to-add.types";
 import PlusButton from "@/components/dashboard/forms/click-to-add/components/PlusButton";
 
 import MinusButton from "@/components/dashboard/forms/click-to-add/components/MinusButton";
+import { cn } from "@/lib/utils";
 
 const ClickToAddInputs = <T extends Detail>({
   details,
@@ -14,6 +18,8 @@ const ClickToAddInputs = <T extends Detail>({
   initialDetail = {} as T,
   header,
   colorPicker,
+  containerClassName,
+  inputClassName
 }: ClickToAddInputsProps<T>) => {
   const colorPickerRef = useRef<HTMLDivElement | null>(null);
   const [colorPickerIndex, setColorPickerIndex] = useState<number | null>(null);
@@ -72,7 +78,7 @@ const ClickToAddInputs = <T extends Detail>({
       {details.map((detail, index) => (
         <div key={index} className="flex items-center gap-x-4">
           {Object.keys(detail).map((property, propIndex) => (
-            <div key={propIndex} className="flex items-center gap-x-4">
+            <div key={propIndex} className={cn("flex items-center gap-x-4", containerClassName)}>
               {property === "color" && colorPicker && (
                 <div className="flex gap-x-4">
                   <button
@@ -115,7 +121,7 @@ const ClickToAddInputs = <T extends Detail>({
                       : e.target.value
                   )
                 }
-                className="w-28"
+                className={cn("w-28 placeholder:capitalize", inputClassName)}
                 type={typeof detail[property] === "number" ? "number" : "text"}
                 step={typeof detail[property] === "number" ? 0.01 : undefined}
                 name={property}
