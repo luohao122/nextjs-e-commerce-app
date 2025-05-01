@@ -1,3 +1,5 @@
+import { Cart, CartItem, Coupon, Store } from "@prisma/client";
+
 export type CartProductType = {
   productId: string;
   variantId: string;

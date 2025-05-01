@@ -1,4 +1,4 @@
-import ThemeToggle from "@/components/shared/theme-toggle";
+import ThemeToggle from "@/components/shared/theme-toggle/theme-toggle";
 import { UserButton } from "@clerk/nextjs";
 
 export default function DashboardHeader() {

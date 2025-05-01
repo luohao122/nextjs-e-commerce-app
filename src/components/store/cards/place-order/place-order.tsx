@@ -1,11 +1,11 @@
 import { Dispatch, FC, SetStateAction, useState } from "react";
-import { Coupon, ShippingAddress } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
+import { ShippingAddress } from "@prisma/client";
 import { Button } from "@/components/store/ui/button";
 import FastDelivery from "@/components/store/cards/fast-delivery/fast-delivery";
-import SecurityPrivacyCard from "@/components/store/product-page/return-privacy-security-card/security-privacy-card";
 
+import SecurityPrivacyCard from "@/components/store/product-page/return-privacy-security-card/security-privacy-card";
 import { emptyUserCart, placeOrder } from "@/queries/user.query";
 import { useCartStore } from "@/cart-store/useCartStore";
 
@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { CartWithCartItemsType } from "@/types/cart.types";
 
 import Info from "@/components/store/cards/place-order/info";
+import { PulseLoader } from "react-spinners";
 
 interface Props {
   shippingAddress: ShippingAddress | null;
@@ -31,6 +32,7 @@ const PlaceOrderCard: FC<Props> = ({
   const { id, coupon, subTotal, shippingFees, total } = cartData;
   const { push } = useRouter();
   const emptyCart = useCartStore((state) => state.emptyCart);
+
   const handlePlaceOrder = async () => {
     setLoading(true);
     if (!shippingAddress) {
@@ -120,7 +122,11 @@ const PlaceOrderCard: FC<Props> = ({
       </div>
       <div className="mt-2 p-4 bg-white">
         <Button onClick={() => handlePlaceOrder()}>
-          {loading ? <div>Loading</div> : <span>Place order</span>}
+          {loading ? (
+            <PulseLoader size={5} color="#fff" />
+          ) : (
+            <span>Place order</span>
+          )}
         </Button>
       </div>
       <div className="mt-2 p-4 bg-white px-6">

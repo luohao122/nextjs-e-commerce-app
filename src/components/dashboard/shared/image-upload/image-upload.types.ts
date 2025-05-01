@@ -6,4 +6,5 @@ export interface ImageUploadProps {
   type: "standard" | "profile" | "cover";
   dontShowPreview?: boolean;
   cloudinaryPreset: string;
+  error?: boolean;
 }

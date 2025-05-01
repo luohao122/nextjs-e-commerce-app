@@ -1,7 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 
 import { DashboardSidebarProps } from "@/components/dashboard/dashboard-sidebar/dashboard-sidebar.types";
-import Logo from "@/components/shared/logo";
+import Logo from "@/components/shared/logo/logo";
 import UserInfo from "@/components/dashboard/user-info/user-info";
 
 import AdminDashboardSidebarNav from "@/components/dashboard/admin-dashboard-sidebar-nav/admin-dashboard-sidebar-nav";

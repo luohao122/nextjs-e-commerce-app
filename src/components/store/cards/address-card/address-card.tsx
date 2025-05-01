@@ -1,25 +1,16 @@
-import { Check } from "lucide-react";
 import { FC, useState } from "react";
-import { Country } from "@prisma/client";
-
 import { useRouter } from "next/navigation";
+import { Check } from "lucide-react";
 
-import { UserShippingAddressType } from "@/types/shipping.types";
 import { cn } from "@/lib/utils";
 import Modal from "@/components/store/shared/modal/modal";
+import AddressDetails from "@/components/store/shared/shipping-address/address-details/address-details";
 
-import AddressDetails from "@/components/store/shared/shipping-address/address-details";
-import { upsertShippingAddress } from "@/queries/user";
+import { upsertShippingAddress } from "@/queries/user.query";
 import { useToast } from "@/hooks/use-toast";
+import { AddressCardProps } from "@/components/store/cards/address-card/address-card.types";
 
-interface Props {
-  address: UserShippingAddressType;
-  isSelected: boolean;
-  onSelect: () => void;
-  countries: Country[];
-}
-
-const ShippingAddressCard: FC<Props> = ({
+const ShippingAddressCard: FC<AddressCardProps> = ({
   address,
   countries,
   isSelected,
@@ -28,9 +19,11 @@ const ShippingAddressCard: FC<Props> = ({
   const { toast } = useToast();
   const router = useRouter();
   const [show, setShow] = useState(false);
+
   const handleMakeDefault = async () => {
     try {
-      const { country, ...newAddress } = address;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { country, user, ...newAddress } = address;
       const response = await upsertShippingAddress({
         ...newAddress,
         default: true,

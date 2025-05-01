@@ -1,11 +1,4 @@
-import {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import {
   Check,
   ChevronRight,
@@ -21,21 +14,12 @@ import Link from "next/link";
 
 import { useCartStore } from "@/cart-store/useCartStore";
 import { cn } from "@/lib/utils";
+
 import { addToWishlist } from "@/queries/user.query";
-
-import { CartProductType } from "@/types/cart.types";
-import { Country } from "@/types/types";
 import { useToast } from "@/hooks/use-toast";
+import { CartProductProps } from "@/components/store/cards/cart-product/cart-product.types";
 
-interface Props {
-  product: CartProductType;
-  selectedItems: CartProductType[];
-  setSelectedItems: Dispatch<SetStateAction<CartProductType[]>>;
-  setTotalShipping: Dispatch<SetStateAction<number>>;
-  userCountry: Country;
-}
-
-const CartProduct: FC<Props> = ({
+const CartProduct: FC<CartProductProps> = ({
   product,
   selectedItems,
   setSelectedItems,

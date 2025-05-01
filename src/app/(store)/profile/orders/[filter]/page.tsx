@@ -5,9 +5,11 @@ import { OrderTableFilter } from "@/types/order.types";
 export default async function ProfileFilteredOrderPage({
   params,
 }: {
-  params: { filter: string };
+  params: Promise<{ filter: string }>;
 }) {
-  const filter = params.filter ? (params.filter as OrderTableFilter) : "";
+  const filter = (await params).filter
+    ? ((await params).filter as OrderTableFilter)
+    : "";
   const orders_data = await getUserOrders(filter);
   const { orders, totalPages } = orders_data;
   return (

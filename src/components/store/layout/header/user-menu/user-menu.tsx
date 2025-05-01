@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default async function UserMenu() {
   const user = await currentUser();
+  const role = user?.privateMetadata.role;
 
   return (
     <div className="relative group">
@@ -21,7 +22,7 @@ export default async function UserMenu() {
             alt={user.fullName!}
             width={40}
             height={40}
-            className="rounded-full"
+            className="w-10 h-10 object-cover rounded-full"
           />
         ) : (
           <div className="flex h-11 items-center py-0 mx-2 cursor-pointer">
@@ -46,7 +47,7 @@ export default async function UserMenu() {
         className={cn(
           "hidden absolute top-0 -left-20 group-hover:block cursor-pointer",
           {
-            "-left-[200px] lg:-left-[138px]": user,
+            "-left-[200px] lg:-left-[148px]": user,
           }
         )}
       >
@@ -94,15 +95,63 @@ export default async function UserMenu() {
                 </ul>
                 <Separator className="max-w-[257px] mx-auto" />
                 <ul className="pt-2.5 pr-4 pb-1 pl-4 w-[288px]">
-                  {extraLinks.map((item, index) => (
-                    <li key={index}>
-                      <Link href={item.link}>
-                        <span className="block text-sm text-main-primary py-1.5 hover:underline">
-                          {item.title}
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
+                  {extraLinks.map((item, index) =>
+                    role === "SELLER" && item.link === "/seller/apply" ? (
+                      <></>
+                    ) : (
+                      <>
+                        <li key={index}>
+                          <Link href={item.link}>
+                            <span className="block text-sm text-main-primary py-1.5 hover:underline">
+                              {item.title}
+                            </span>
+                          </Link>
+                        </li>
+                      </>
+                    )
+                  )}
+                </ul>
+                <Separator className="max-w-[257px] mx-auto" />
+                <ul className="pt-2.5 pr-4 pb-1 pl-4 w-[288px]">
+                  {user ? (
+                    <>
+                      {role === "SELLER" && (
+                        <li>
+                          <Link href={"/dashboard/seller"}>
+                            <span className="block text-sm text-main-primary py-1.5 hover:underline">
+                              Switch to Seller Dashboard
+                            </span>
+                          </Link>
+                        </li>
+                      )}
+                      {role === "ADMIN" && (
+                        <li>
+                          <Link href={"/dashboard/admin"}>
+                            <span className="block text-sm text-main-primary py-1.5 hover:underline">
+                              Switch to Admin Dashboard
+                            </span>
+                          </Link>
+                        </li>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <li>
+                        <Link href={"/sign-up"}>
+                          <span className="block text-sm text-main-primary py-1.5 hover:underline">
+                            Join
+                          </span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href={"/sign-in"}>
+                          <span className="block text-sm text-main-primary py-1.5 hover:underline">
+                            Sign in
+                          </span>
+                        </Link>
+                      </li>
+                    </>
+                  )}
                 </ul>
               </div>
             </div>
@@ -130,6 +179,7 @@ const links = [
     link: "/profile/wishlist",
   },
 ];
+
 const extraLinks = [
   {
     title: "Profile",
@@ -141,7 +191,7 @@ const extraLinks = [
   },
   {
     title: "Become a Seller",
-    link: "/become-seller",
+    link: "/seller/apply",
   },
   {
     title: "Help Center",

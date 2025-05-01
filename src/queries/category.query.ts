@@ -94,10 +94,38 @@ export const upsertCategory = async (category: Category) => {
  * @returns {Promise<Category[]>} A promise that resolves with an array of Category objects.
  * @throws {Error} Throws an error if fetching categories fails.
  */
-export const getAllCategories = async () => {
+export const getAllCategories = async (storeUrl?: string) => {
+  let storeId: string | undefined;
+
+  if (storeUrl) {
+    // Retrieve the storeId based on the storeUrl
+    const store = await db.store.findUnique({
+      where: { url: storeUrl },
+    });
+
+    // If no store is found, return an empty array or handle as needed
+    if (!store) {
+      return [];
+    }
+
+    storeId = store.id;
+  }
+
   try {
     // Retrieve all categories, ordering by 'updatedAt' in descending order.
     const categories = await db.category.findMany({
+      where: storeId
+        ? {
+            products: {
+              some: {
+                storeId: storeId,
+              },
+            },
+          }
+        : {},
+      include: {
+        subCategories: true,
+      },
       orderBy: {
         updatedAt: "desc",
       },

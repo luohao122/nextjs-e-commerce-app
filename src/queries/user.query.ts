@@ -8,6 +8,8 @@ import { db } from "@/lib/db";
 import { CartProductType, CartWithCartItemsType } from "@/types/cart.types";
 import { getDeliveryDetailsForStoreByCountry, getProductShippingFee, getShippingDetails } from "@/queries/product.query";
 
+import { CartItem, ShippingAddress, Country } from "@prisma/client";
+
 /**
  * Add a product to the user's wishlist.
  * @param productId - The ID of the product to add to the wishlist.
@@ -563,7 +565,7 @@ export const placeOrder = async (
       });
 
       if (!temp_country)
-        throw new Error("Failed to get Shipping details for order.");
+        throw new Error("Failed to get shipping details for order.");
 
       const country = {
         name: temp_country.name,
@@ -733,24 +735,73 @@ export const placeOrder = async (
     },
   });
 
-  // Delete cart
-  /*
-  await db.cart.delete({
-    where: {
-      id: cartId,
-    },
-  });
-  */
-
   return {
     orderId: order.id,
   };
 };
 
+export const upsertShippingAddress = async (address: ShippingAddress) => {
+  try {
+    // Get current user
+    const user = await currentUser();
+
+    // Ensure user is authenticated
+    if (!user) throw new Error("Unauthenticated.");
+
+    // Ensure address data is provided
+    if (!address) throw new Error("Please provide address data.");
+
+    console.log(user)
+
+    // Handle making the rest of addresses default false when we are adding a new default
+    if (address.default) {
+      const addressDB = await db.shippingAddress.findUnique({
+        where: { id: address.id },
+      });
+      if (addressDB) {
+        try {
+          await db.shippingAddress.updateMany({
+            where: {
+              userId: user.id,
+              default: true,
+            },
+            data: {
+              default: false,
+            },
+          });
+        } catch (error) {
+          console.error("Error resetting default shipping addresses:", error);
+          throw new Error("Could not reset default shipping addresses");
+        }
+      }
+    }
+
+    // Upsert shipping address into the database
+    const upsertedAddress = await db.shippingAddress.upsert({
+      where: {
+        id: address.id,
+      },
+      update: {
+        ...address,
+        userId: user.id,
+      },
+      create: {
+        ...address,
+        userId: user.id,
+      },
+    });
+
+    return upsertedAddress;
+  } catch (error) {
+    // Log and re-throw any errors
+    console.error("Error upserting shipping address:", error);
+    throw error;
+  }
+};
 
 export const updateCheckoutProductstWithLatest = async (
   cartProducts: CartItem[],
-  address: CountryDB | undefined
+  address: Country | undefined
 ): Promise<CartWithCartItemsType> => {
   // Fetch product, variant, and size data from the database for validation
   const validatedCartItems = await Promise.all(
@@ -851,7 +902,7 @@ export const updateCheckoutProductstWithLatest = async (
           },
         });
         return newCartItem;
-      } catch (error) {
+      } catch {
         return cartProduct;
       }
     })

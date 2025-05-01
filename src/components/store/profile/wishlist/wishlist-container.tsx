@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -25,7 +26,7 @@ export default function WishlistContainer({
   return (
     <div>
       <div className="flex flex-wrap pb-16">
-        <ProductList products={products} />
+        <ProductList products={products as any} />
       </div>
       <Pagination page={page} setPage={setPage} totalPages={totalPages} />
     </div>

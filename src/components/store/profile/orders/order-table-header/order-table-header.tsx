@@ -1,20 +1,12 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { Delete, Search } from "lucide-react";
+import { FC, useEffect, useState } from "react";
+import { ChevronDown, Delete, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { OrderTableDateFilter, OrderTableFilter } from "@/types/order.types";
 import { cn } from "@/lib/utils";
+import { OrderTableHeaderProps } from "@/components/store/profile/orders/order-table-header/order-table-header.types";
 
-interface Props {
-  filter: OrderTableFilter;
-  setFilter: Dispatch<SetStateAction<OrderTableFilter>>;
-  period: OrderTableDateFilter;
-  setPeriod: Dispatch<SetStateAction<OrderTableDateFilter>>;
-  search: string;
-  setSearch: Dispatch<SetStateAction<string>>;
-}
-
-const OrderTableHeader: FC<Props> = ({
+const OrderTableHeader: FC<OrderTableHeaderProps> = ({
   filter,
   setFilter,
   search,
@@ -95,16 +87,7 @@ const OrderTableHeader: FC<Props> = ({
               </option>
             </select>
             <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-              <svg
-                viewBox="0 0 1024 1024"
-                width="1em"
-                height="1em"
-                fill="currentColor"
-                aria-hidden="false"
-                focusable="false"
-              >
-                <path d="M97.6 308.032a35.925333 35.925333 0 0 0-4.128 49.813333l1.408 1.632 355.232 371.914667a85.333333 85.333333 0 0 0 123.381333 0.032l355.626667-371.946667a35.936 35.936 0 0 0-2.730667-51.445333 37.674667 37.674667 0 0 0-50.944 1.130667l-1.504 1.546666L527.253333 674.986667a21.333333 21.333333 0 0 1-30.922666 0L150.058667 310.698667a37.653333 37.653333 0 0 0-52.448-2.666667z" />
-              </svg>
+              <ChevronDown />
             </span>
           </div>
           {/* Input */}
@@ -148,16 +131,7 @@ const OrderTableHeader: FC<Props> = ({
               ))}
             </select>
             <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-              <svg
-                viewBox="0 0 1024 1024"
-                width="1em"
-                height="1em"
-                fill="currentColor"
-                aria-hidden="false"
-                focusable="false"
-              >
-                <path d="M97.6 308.032a35.925333 35.925333 0 0 0-4.128 49.813333l1.408 1.632 355.232 371.914667a85.333333 85.333333 0 0 0 123.381333 0.032l355.626667-371.946667a35.936 35.936 0 0 0-2.730667-51.445333 37.674667 37.674667 0 0 0-50.944 1.130667l-1.504 1.546666L527.253333 674.986667a21.333333 21.333333 0 0 1-30.922666 0L150.058667 310.698667a37.653333 37.653333 0 0 0-52.448-2.666667z" />
-              </svg>
+              <ChevronDown />
             </span>
           </div>
         </div>

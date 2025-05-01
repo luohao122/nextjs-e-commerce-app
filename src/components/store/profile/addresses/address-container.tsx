@@ -3,7 +3,8 @@
 import { FC, useState } from "react";
 
 import { AddressContainerProps } from "@/components/store/profile/addresses/address-container.types";
-import UserShippingAddresses from "@/components/store/shared/shipping-address/shipping-addresses";
+import UserShippingAddresses from "@/components/store/shared/shipping-address/shipping-addresses/shipping-addresses";
+import { ShippingAddress } from "@prisma/client";
 
 const AddressContainer: FC<AddressContainerProps> = ({
   addresses,

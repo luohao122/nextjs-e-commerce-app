@@ -36,8 +36,7 @@ const ProductPageContainer: FC<ProductPageContainerProps> = ({
   );
   const [isProductValid, setIsProductValid] = useState<boolean>(false);
 
-  const { productId, variantId, images, shippingDetails, sizes } =
-    productData;
+  const { productId, variantId, images, shippingDetails, sizes } = productData;
 
   const {
     shippingFeeMethod,
@@ -130,7 +129,8 @@ const ProductPageContainer: FC<ProductPageContainerProps> = ({
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
-  }, [setCart]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Add product to history
   updateProductHistory(variantId);

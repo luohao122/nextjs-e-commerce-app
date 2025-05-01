@@ -14,14 +14,13 @@ import ProductPrice from "@/components/store/product-page/product-price/product-
 
 import { useToast } from "@/hooks/use-toast";
 import Countdown from "@/components/store/shared/count-down/count-down";
-import ColorWheel from "@/components/shared/color-wheel";
+import ColorWheel from "@/components/shared/color-wheel/color-wheel";
 
 import ProductVariantSelector from "@/components/store/product-page/product-info/product-variant-selector/product-variant-selector";
 import ProductSizeSelector from "@/components/store/product-page/product-info/product-size-selector/product-size-selector";
 import ProductAssurancePolicy from "@/components/store/product-page/product-info/product-assurance-policy/product-assurance-policy";
 
 import { CartProductType } from "@/types/cart.types";
-import ProductWatch from "@/components/store/product-page/product-watch/product-watch";
 
 interface ProductInfoProps {
   productData: ProductPageDataType;
@@ -54,7 +53,6 @@ const ProductInfo: FC<ProductInfoProps> = ({
     isSale,
     saleEndDate,
     variantName,
-    variantId,
     store,
     rating,
     reviewsStatistics,

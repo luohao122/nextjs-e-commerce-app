@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import OrderStatusTag from "@/components/shared/order-status";
-import PaymentStatusTag from "@/components/shared/payment-status";
+import OrderStatusTag from "@/components/shared/order-status/order-status";
+import PaymentStatusTag from "@/components/shared/payment-status/payment-status";
 import {
   OrderStatus,
   OrderTableDateFilter,
   OrderTableFilter,
-  UserOrderType
+  UserOrderType,
 } from "@/types/order.types";
 
 import { PaymentStatus } from "@/types/payment.types";
@@ -55,6 +55,7 @@ export default function OrdersTable({
     };
     getData();
   }, [page, filter, search, period]);
+  
   return (
     <div>
       <div className="">
@@ -105,6 +106,7 @@ export default function OrdersTable({
                     const images = Array.from(
                       order.groups.flatMap((g) => g.items.map((p) => p.image))
                     );
+
                     return (
                       <tr key={order.id} className="border-b">
                         <td className="p-4">
@@ -125,7 +127,7 @@ export default function OrdersTable({
                               <Image
                                 key={i}
                                 src={img}
-                                alt=""
+                                alt={`img-${i}`}
                                 width={50}
                                 height={50}
                                 className="w-7 h-7 object-cover shadow-sm rounded-full"

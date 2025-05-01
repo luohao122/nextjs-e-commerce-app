@@ -7,6 +7,7 @@ import { CldUploadWidget } from "next-cloudinary";
 import { ImageUploadProps } from "./image-upload.types";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const ImageUpload: FC<ImageUploadProps> = ({
   disabled,
@@ -16,11 +17,23 @@ const ImageUpload: FC<ImageUploadProps> = ({
   value,
   cloudinaryPreset,
   dontShowPreview,
+  error,
 }) => {
   // Since the component from next-cloudinary has a lot of hydration issues
   // we need to set a flag to determine whether it is mounted
   // before using it
   const [isMounted, setIsMounted] = useState(false);
+  const [isBouncing, setIsBouncing] = useState(false); // Add state for bounce
+
+  useEffect(() => {
+    if (error) {
+      setIsBouncing(true);
+      const timer = setTimeout(() => {
+        setIsBouncing(false); // Stop the bounce after 1 and half second
+      }, 1500);
+      return () => clearTimeout(timer); // Clean up timer if the component unmounts or error changes
+    }
+  }, [error]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -37,7 +50,15 @@ const ImageUpload: FC<ImageUploadProps> = ({
 
   if (type === "profile") {
     return (
-      <div className="relative rounded-full w-52 h-52 bg-gray-200 border-2 border-white shadow-2xl">
+      <div
+        className={cn(
+          "relative  rounded-full w-52 h-52  bg-gray-200 border-2 border-white shadow-2xl overflow-visible",
+          {
+            "bg-red-100": error,
+            "animate-pulse": isBouncing,
+          }
+        )}
+      >
         {value.length > 0 && (
           <Image
             src={value[0]}
@@ -90,7 +111,13 @@ const ImageUpload: FC<ImageUploadProps> = ({
     return (
       <div
         style={{ height: "348px" }}
-        className="relative w-full bg-gray-100 rounded-lg bg-gradient-to-b from-gray-100 via-gray-100 to-gray-400 overflow-hidden"
+        className={cn(
+          "relative w-full bg-gray-100 rounded-lg bg-gradient-to-b from-gray-100 via-gray-100 to-gray-400 overflow-hidden",
+          {
+            "from-red-100 to-red-200 ": error,
+            "animate-bounce": isBouncing,
+          }
+        )}
       >
         {value.length > 0 && (
           <Image
@@ -169,7 +196,7 @@ const ImageUpload: FC<ImageUploadProps> = ({
                 <Image
                   fill
                   className="object-cover rounded-md"
-                  alt=""
+                  alt={imageUrl}
                   src={imageUrl}
                 />
               </div>

@@ -1,4 +1,11 @@
-import { Country, FreeShipping, FreeShippingCountry, Prisma, User } from "@prisma/client";
+import {
+  Country,
+  FreeShipping,
+  FreeShippingCountry,
+  Prisma,
+  ShippingAddress,
+  User,
+} from "@prisma/client";
 
 import { getShippingDetails } from "@/queries/product.query";
 

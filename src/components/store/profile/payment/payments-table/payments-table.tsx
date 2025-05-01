@@ -91,6 +91,7 @@ export default function PaymentsTable({
                 <tbody>
                   {data.map((payment) => {
                     const amount = payment.amount / 100;
+
                     return (
                       <tr key={payment.id} className="border-b">
                         <td className="p-4">
@@ -105,7 +106,7 @@ export default function PaymentsTable({
                             </div>
                           </div>
                         </td>
-                        <td>{payment.paymentInetntId}</td>
+                        <td>{payment.paymentIntentId}</td>
                         <td>{payment.paymentMethod}</td>
                         <td>${amount.toFixed(2)}</td>
                         <td>{payment.status}</td>

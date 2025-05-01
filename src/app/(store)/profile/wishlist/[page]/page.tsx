@@ -4,11 +4,13 @@ import { getUserWishlist } from "@/queries/profile.query";
 export default async function ProfileWishlistPage({
   params,
 }: {
-  params: { page: string };
+  params: Promise<{ page: string }>;
 }) {
-  const page = Number(params.page);
+  const pageParams = (await params).page;
+  const page = Number(pageParams);
   const wishlist_data = await getUserWishlist(page);
   const { wishlist, totalPages } = wishlist_data;
+
   return (
     <div className="bg-white py-4 px-6">
       <h1 className="text-lg mb-3 font-bold">Your Wishlist</h1>

@@ -25,7 +25,7 @@ export const columns: ColumnDef<SubCategoryWithCategory>[] = [
         <div className="relative h-44 min-w-64 rounded-xl overflow-hidden">
           <Image
             src={row.original.image}
-            alt=""
+            alt={row.original.name}
             width={1000}
             height={1000}
             className="w-40 h-40 rounded-full object-cover shadow-2xl"

@@ -55,7 +55,7 @@ const CartHeader: FC<Props> = ({
   return (
     <div className="bg-white py-4">
       <div>
-        <div className="px-6 g-white">
+        <div className="px-6 bg-white">
           <div className="flex items-center text-[#222] font-bold text-2xl">
             <h1>Cart ({cartLength})</h1>
           </div>

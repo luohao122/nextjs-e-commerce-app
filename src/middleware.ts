@@ -4,7 +4,13 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { getUserCountry } from "@/lib/utils";
 
 export default clerkMiddleware(async (auth, req) => {
-  const protectedRoutes = createRouteMatcher(["/dashboard", "/dashboard/(.*)"]);
+  const protectedRoutes = createRouteMatcher([
+    "/dashboard",
+    "/dashboard/(.*)",
+    "/checkout",
+    "/profile",
+    "/profile/(.*)",
+  ]);
   if (protectedRoutes(req)) {
     await auth.protect();
   }

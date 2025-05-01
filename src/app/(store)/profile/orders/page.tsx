@@ -2,8 +2,9 @@ import OrdersTable from "@/components/store/profile/orders/orders-table/orders-t
 import { getUserOrders } from "@/queries/profile.query";
 
 export default async function ProfileOrdersPage() {
-  const orders_data = await getUserOrders();
-  const { orders, totalPages } = orders_data;
+  const ordersData = await getUserOrders();
+  const { orders, totalPages } = ordersData;
+
   return (
     <div>
       <OrdersTable orders={orders} totalPages={totalPages} />

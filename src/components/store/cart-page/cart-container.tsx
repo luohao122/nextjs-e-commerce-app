@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { PulseLoader } from "react-spinners";
 
 import { useCartStore } from "@/cart-store/useCartStore";
 import useFromStore from "@/hooks/useFromStore";
@@ -39,7 +40,6 @@ export default function CartContainer({
   useEffect(() => {
     const loadAndSyncCart = async () => {
       if (cartItems?.length) {
-        setLoading(true);
         try {
           const updatedCart = await updateCartWithLatest(cartItems);
           setCart(updatedCart);
@@ -59,7 +59,7 @@ export default function CartContainer({
       {cartItems && cartItems.length > 0 ? (
         <>
           {loading ? (
-            <div>Loading...</div>
+            <PulseLoader />
           ) : (
             <div className="bg-[#f5f5f5] min-h-[calc(100vh-65px)]">
               <div className="max-w-[1200px] mx-auto py-6 flex">

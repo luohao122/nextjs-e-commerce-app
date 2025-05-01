@@ -6,6 +6,7 @@ import { ShippingRate, Store } from "@prisma/client";
 import { USER_ROLES } from "@/config/constants";
 import { db } from "@/lib/db";
 import { StoreDefaultShippingType } from "@/components/dashboard/forms/store-default-shipping-details/store-default-shipping-details.types";
+import { StoreStatus, StoreType } from "@/types/types";
 
 /**
  * Upserts a store in the database.
@@ -21,7 +22,7 @@ import { StoreDefaultShippingType } from "@/components/dashboard/forms/store-def
  * @throws {Error} If the user is unauthenticated, unauthorized, if store data is missing,
  * or if a store with the same name or url already exists (excluding the current store).
  */
-export const upsertStore = async (store: Partial<Store>) => {
+export const upsertStore = async (store: Store) => {
   try {
     // Ensure the current user is authenticated
     const user = await currentUser();
@@ -77,6 +78,8 @@ export const upsertStore = async (store: Partial<Store>) => {
       }
       throw new Error(errorMessage);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { userId, ...storeData } = store;
 
     // Upsert the store: update it if it exists, otherwise create a new one
     const storeDetails = await db.store.upsert({
@@ -85,7 +88,7 @@ export const upsertStore = async (store: Partial<Store>) => {
       },
       update: store,
       create: {
-        ...store,
+        ...storeData,
         user: {
           connect: { id: user.id },
         },
@@ -460,37 +463,36 @@ export const getStoreOrders = async (storeUrl: string) => {
       throw new Error("You are not the owner of the store!");
     }
 
-    // const orders = await db.orderGroup.findMany({
-    //   where: {
-    //     storeId: foundStore.id,
-    //   },
-    //   include: {
-    //     items: true,
-    //     coupon: true,
-    //     order: {
-    //       select: {
-    //         paymentStatus: true,
+    const orders = await db.orderGroup.findMany({
+      where: {
+        storeId: foundStore.id,
+      },
+      include: {
+        items: true,
+        coupon: true,
+        order: {
+          select: {
+            paymentStatus: true,
+            shippingAddress: {
+              include: {
+                country: true,
+                user: {
+                  select: {
+                    email: true,
+                  },
+                },
+              },
+            },
+            paymentDetails: true,
+          },
+        },
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
 
-    //         shippingAddress: {
-    //           include: {
-    //             country: true,
-    //             user: {
-    //               select: {
-    //                 email: true,
-    //               },
-    //             },
-    //           },
-    //         },
-    //         paymentDetails: true,
-    //       },
-    //     },
-    //   },
-    //   orderBy: {
-    //     updatedAt: "desc",
-    //   },
-    // });
-
-    // return orders;
+    return orders;
   } catch (error) {
     console.error(error);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -499,7 +501,6 @@ export const getStoreOrders = async (storeUrl: string) => {
 };
 
 export const applySeller = async (store: StoreType) => {
-  console.log("store", store);
   try {
     // Get current user
     const user = await currentUser();
@@ -540,7 +541,6 @@ export const applySeller = async (store: StoreType) => {
       }
       throw new Error(errorMessage);
     }
-
     // Upsert store details into the database
     const storeDetails = await db.store.create({
       data: {
@@ -707,5 +707,6 @@ export const getStorePageDetails = async (storeUrl: string) => {
   if (!store) {
     throw new Error(`Store with URL "${storeUrl}" not found.`);
   }
+
   return store;
 };

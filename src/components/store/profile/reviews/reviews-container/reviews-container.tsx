@@ -48,6 +48,7 @@ export default function ReviewsContainer({
     };
     getData();
   }, [page, filter, search, period]);
+  
   return (
     <div>
       <div className="">

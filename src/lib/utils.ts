@@ -262,7 +262,7 @@ export const updateProductHistory = (variantId: string) => {
   productHistory.unshift(variantId);
 
   // Check storage limit (manage max number of products)
-  const MAX_PRODUCTS = 100;
+  const MAX_PRODUCTS = 20;
   if (productHistory.length > MAX_PRODUCTS) {
     productHistory.pop(); // Remove the oldest product
   }

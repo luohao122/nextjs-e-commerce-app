@@ -1,11 +1,13 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 import { getUserCart, getUserShippingAddresses } from "@/queries/user.query";
 import { getCountryList } from "@/queries/country.query";
-import { cookies } from "next/headers";
 import { Country } from "@/types/types";
+
 import Header from "@/components/store/layout/header/header";
+import CheckoutContainer from "@/components/store/checkout-page/checkout-page";
 
 export default async function CheckoutPage() {
   const user = await currentUser();
@@ -19,7 +21,7 @@ export default async function CheckoutPage() {
   }
 
   const addresses = await getUserShippingAddresses();
-  const countries = await getCountryList();
+  const countries = await getCountryList('desc');
 
   const cookieStore = await cookies();
   const userCountryCookie = cookieStore.get("userCountry");

@@ -1,4 +1,6 @@
-import { Prisma } from "@prisma/client";
+import { getOrder } from "@/queries/order.query";
+import { getUserOrders } from "@/queries/profile.query";
+import { Coupon, OrderGroup, OrderItem, Prisma, Store } from "@prisma/client";
 
 export enum OrderStatus {
   Pending = "Pending",
@@ -40,3 +42,5 @@ export type OrderTableDateFilter =
 export type UserOrderType = Prisma.PromiseReturnType<
   typeof getUserOrders
 >["orders"][0];
+
+export type OrderFullType = Prisma.PromiseReturnType<typeof getOrder>;

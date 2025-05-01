@@ -5,7 +5,7 @@ import slugify from "slugify";
 import { getCookie } from "cookies-next/server";
 
 import { cookies } from "next/headers";
-import { Store } from "@prisma/client";
+import { ProductVariant, Size, Store } from "@prisma/client";
 
 import { ProductWithVariantType } from "@/components/dashboard/forms/product-details/product-details.types";
 import { USER_ROLES } from "@/config/constants";
@@ -767,7 +767,6 @@ export const getRatingStatistics = async (productId: string) => {
 export const getProducts = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   filters: any = {},
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   sortBy: string = "",
   page: number = 1,
   pageSize: number = 10
@@ -850,6 +849,23 @@ export const getProducts = async (
     }
   }
 
+  if (filters.minPrice || filters.maxPrice) {
+    whereClause.AND.push({
+      variants: {
+        some: {
+          sizes: {
+            some: {
+              price: {
+                gte: filters.minPrice || 0, // Default to 0 if no min price is set
+                lte: filters.maxPrice || Infinity, // Default to Infinity if no max price is set
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
   // Apply search filter (search term in product name or description)
   if (filters.search) {
     whereClause.AND.push({
@@ -872,8 +888,25 @@ export const getProducts = async (
     });
   }
 
+  // Define the sort order
+  let orderBy: Record<string, SortOrder> = {};
+  switch (sortBy) {
+    case "most-popular":
+      orderBy = { views: "desc" };
+      break;
+    case "new-arrivals":
+      orderBy = { createdAt: "desc" };
+      break;
+    case "top-rated":
+      orderBy = { rating: "desc" };
+      break;
+    default:
+      orderBy = { views: "desc" };
+  }
+
   const products = await db.product.findMany({
     where: whereClause,
+    orderBy,
     take: limit,
     skip,
     include: {
@@ -885,6 +918,39 @@ export const getProducts = async (
         },
       },
     },
+  });
+
+  type VariantWithSizes = ProductVariant & { sizes: Size[] };
+
+  // Product price sorting
+  products.sort((a, b) => {
+    // Helper function to get the minimum price from a product's variants
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const getMinPrice = (product: any) =>
+      Math.min(
+        ...product.variants.flatMap((variant: VariantWithSizes) =>
+          variant.sizes.map((size) => {
+            const discount = size.discount;
+            const discountedPrice = size.price * (1 - discount / 100);
+            return discountedPrice;
+          })
+        ),
+        Infinity // Default to Infinity if no sizes exist
+      );
+
+    // Get minimum prices for both products
+    const minPriceA = getMinPrice(a);
+    const minPriceB = getMinPrice(b);
+
+    // Explicitly check for price sorting conditions
+    if (sortBy === "price-low-to-high") {
+      return minPriceA - minPriceB; // Ascending order
+    } else if (sortBy === "price-high-to-low") {
+      return minPriceB - minPriceA; // Descending order
+    }
+
+    // If no price sort option is provided, return 0 (no sorting by price)
+    return 0;
   });
 
   const productsWithFilteredVariants = products.map((product) => {
@@ -910,6 +976,7 @@ export const getProducts = async (
       name: product.name,
       rating: product.rating,
       sales: product.sales,
+      numReviews: product.numReviews,
       variants,
       variantImages,
     };
@@ -1102,6 +1169,9 @@ export const getProductPageData = async (
     product.storeId,
     user?.id
   );
+
+  // Handle product views
+  await incrementProductViews(product.id);
 
   const ratingStatistics = await getRatingStatistics(product.id);
 
@@ -1344,5 +1414,24 @@ export const getProductsByIds = async (
   } catch (error) {
     console.error("Error retrieving products by ids:", error);
     throw new Error("Failed to fetch products. Please try again.");
+  }
+};
+
+const incrementProductViews = async (productId: string) => {
+  const isProductAlreadyViewed = getCookie(`viewedProduct_${productId}`, {
+    cookies,
+  });
+
+  if (!isProductAlreadyViewed) {
+    await db.product.update({
+      where: {
+        id: productId,
+      },
+      data: {
+        views: {
+          increment: 1,
+        },
+      },
+    });
   }
 };

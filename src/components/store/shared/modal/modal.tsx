@@ -1,20 +1,10 @@
-import {
-  Dispatch,
-  FC,
-  ReactNode,
-  RefObject,
-  SetStateAction,
-  useRef,
-} from "react";
+"use client";
+
+import { FC, RefObject, useRef } from "react";
 import { X } from "lucide-react";
 import useOnClickOutside from "use-onclickoutside";
 
-interface ModalProps {
-  title?: string;
-  show: boolean;
-  setShow: Dispatch<SetStateAction<boolean>>;
-  children: ReactNode;
-}
+import { ModalProps } from "@/components/store/shared/modal/modal.types";
 
 const Modal: FC<ModalProps> = ({ children, title, show, setShow }) => {
   const ref = useRef<HTMLDivElement | null>(null);

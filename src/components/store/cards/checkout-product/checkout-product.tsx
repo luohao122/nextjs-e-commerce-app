@@ -12,6 +12,7 @@ export default function CheckoutProductCard({
   isDiscounted: boolean;
 }) {
   const { productSlug, variantSlug, sizeId, shippingFee } = product;
+
   return (
     <div className="bg-white px-6 border-t bordet-t-[#ebebeb] select-none">
       <div className="py-4">
@@ -26,7 +27,7 @@ export default function CheckoutProductCard({
                   src={product.image}
                   width={200}
                   height={200}
-                  alt=""
+                  alt={product.name}
                   className="w-full h-full object-cover rounded-md"
                 />
               </div>

@@ -65,7 +65,7 @@ const ImageUploadStore: FC<ImageUploadProps> = ({
                   width={80}
                   height={80}
                   className="object-cover w-20 h-20 rounded-md"
-                  alt=""
+                  alt={`img-${index}`}
                   src={value[index]}
                 />
               </div>

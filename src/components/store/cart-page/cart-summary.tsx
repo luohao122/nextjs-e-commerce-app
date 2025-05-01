@@ -2,11 +2,12 @@ import { FC, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-import { Button } from "../ui/button";
+import { PulseLoader } from "react-spinners";
+
+import { Button } from "@/components/store/ui/button";
 import { CartProductType } from "@/types/cart.types";
 import { saveUserCart } from "@/queries/user.query";
 
-// import { PulseLoader } from "react-spinners";
 
 interface Props {
   cartItems: CartProductType[];
@@ -87,11 +88,10 @@ const CartSummary: FC<Props> = ({ cartItems, shippingFees }) => {
           </span>
         </h3>
       </div>
-      <div className="my-2 5">
+      <div className="my-2.5">
         <Button onClick={() => handleSaveCart()}>
           {loading ? (
-            // <PulseLoader size={5} color="#fff" />
-            <div>Loading</div>
+            <PulseLoader size={5} color="#fff" />
           ) : (
             <span>Checkout ({cartItems.length})</span>
           )}

@@ -8,10 +8,12 @@ import "swiper/css/pagination";
 
 import { Navigation, Pagination } from "swiper/modules";
 
-import { ProductType, SimpleProduct } from "@/lib/types";
+import { ProductType, SimpleProduct } from "@/types/product.types";
+
 import ProductCard from "@/components/store/cards/product/product-card";
-import ProductCardSimple from "../cards/product/simple-card";
-import ProductCardClean from "../cards/product/clean-card";
+import ProductCardSimple from "@/components/store/cards/product/simple-card";
+import ProductCardClean from "@/components/store/cards/product/clean-card";
+
 interface Props {
   children?: ReactNode;
   products: SimpleProduct[] | ProductType[];

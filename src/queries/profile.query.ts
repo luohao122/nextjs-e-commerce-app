@@ -1,9 +1,19 @@
+"use server";
+
 import { currentUser } from "@clerk/nextjs/server";
 import { subMonths, subYears } from "date-fns";
 
 import { db } from "@/lib/db";
-import { OrderStatus, OrderTableDateFilter, OrderTableFilter } from "@/types/order.types";
-import { PaymentStatus, PaymentTableDateFilter, PaymentTableFilter } from "@/types/payment.types";
+import {
+  OrderStatus,
+  OrderTableDateFilter,
+  OrderTableFilter,
+} from "@/types/order.types";
+import {
+  PaymentStatus,
+  PaymentTableDateFilter,
+  PaymentTableFilter,
+} from "@/types/payment.types";
 
 import { ReviewDateFilter, ReviewFilter } from "@/types/review.types";
 
@@ -246,7 +256,7 @@ export const getUserPayments = async (
           id: { contains: search }, // Search by ID
         },
         {
-          paymentInetntId: { contains: search }, // Search by Payment intent ID
+          paymentIntentId: { contains: search }, // Search by Payment intent ID
         },
       ],
     });

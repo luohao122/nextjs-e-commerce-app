@@ -134,6 +134,8 @@ const StoreDetails: FC<StoreDetailsProps> = ({
         logo: values.logo[0].url,
         cover: values.cover[0].url,
         url: values.url,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-expect-error
         featured: values.featured,
         createdAt: new Date(),
         updatedAt: new Date(),

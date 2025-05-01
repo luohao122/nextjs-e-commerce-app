@@ -7,7 +7,7 @@ import { ChevronDown } from "lucide-react";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 
 import { CountryLanguageCurrencySelectorProps } from "@/components/store/layout/header/country-language-currency-selector/country-language-currency-selector.types";
-import CountrySelector from "@/components/shared/country-selector";
+import CountrySelector from "@/components/shared/country-selector/country-selector";
 import countries from "@/data/countries.json";
 
 import { Country, SelectMenuOption } from "@/types/types";

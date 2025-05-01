@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 
+import { useCartStore } from "@/cart-store/useCartStore";
+
 export default function Cart() {
-  const totalItems = 5;
+  // Get total items in the cart
+  const totalItems = useCartStore((state) => state.totalItems);
 
   return (
     <div className="relative flex h-11 items-center px-2 cursor-pointer">

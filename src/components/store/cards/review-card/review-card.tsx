@@ -3,7 +3,7 @@
 import Image from "next/image";
 import StarRatings from "react-star-ratings";
 
-import ColorWheel from "@/components/shared/color-wheel";
+import ColorWheel from "@/components/shared/color-wheel/color-wheel";
 import { ReviewWithImageType } from "@/types/review.types";
 
 export default function ReviewCard({
